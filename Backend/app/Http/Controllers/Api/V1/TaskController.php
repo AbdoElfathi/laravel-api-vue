@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -23,7 +24,12 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $validatedData = $request->validated();
+        $user = User::find(1)->first();
+        $task = new Task();
+        $task->name = $validatedData['name'];
+        $user->tasks()->save($task);
+        // $task = Task::create($request->validated());
 
         return TaskResource::make($task);
 
